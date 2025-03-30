@@ -36,38 +36,56 @@ void AutoScope::initializeComponent()
     connect(treeView, &MyTreeView::itemDoubleClicked, this, &AutoScope::onTreeViewDoubleClicked);
 }
 
-void AutoScope::loadProjectDirectory(QString folderPath,QStandardItem* item)
+void AutoScope::loadProjectDirectory(const QString& folderPath, QStandardItem* parentItem)
 {
-    if(folderPath.isEmpty()){
-        MsgBoxHelper::showWarning("打开项目","目录不能为空: " + folderPath);
-        return;
-    }
-    QFileInfo fileInfo(folderPath);
-    if(!fileInfo.exists()){
-        MsgBoxHelper::showWarning("打开项目","目录不存在: " + folderPath);
-        return;
-    }
-
-    ProjectNode projectInfo(fileInfo.fileName(), folderPath, fileInfo.isDir());
     QDir dir(folderPath);
-    QStringList filters;
-    filters << ".xlsx";
-    QStringList files = dir.entryList(filters,QDir::Files);
-    foreach(const QString& file , files){
+    if (!dir.exists()) {
+        MsgBoxHelper::showWarning("打开项目", "目录不存在: " + folderPath);
+        return;
+    }
 
+    // 获取目录下的所有文件和子目录（不包括 "." 和 ".."）
+    QStringList entries = dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+    for (const QString &entry : entries) {
+        QString fullPath = dir.absoluteFilePath(entry);
+        QFileInfo entryInfo(fullPath);
+
+        if (entryInfo.isDir()) {
+            // 如果是目录，则创建一个节点并递归加载
+            ProjectNode projectInfo(entryInfo.fileName(), fullPath, true);
+            QStandardItem* childItem = new QStandardItem(entryInfo.fileName());
+            // childItem->setIcon(QIcon(":/icons/folder.png"));
+            parentItem->appendRow(childItem);
+            childItem->setData(QVariant::fromValue(projectInfo), Qt::UserRole);
+
+            // 递归加载子目录
+            loadProjectDirectory(fullPath, childItem);
+        } else {
+            // 如果是文件，则只加载扩展名为 xlsx 的文件
+            if (entryInfo.suffix().toLower() == "xlsx") {
+                ProjectNode projectInfo(entryInfo.fileName(), fullPath, false);
+                QStandardItem* childItem = new QStandardItem(entryInfo.fileName());
+                // childItem->setIcon(QIcon(":/icons/file.png"));
+                parentItem->appendRow(childItem);
+                childItem->setData(QVariant::fromValue(projectInfo), Qt::UserRole);
+            }
+        }
     }
 }
 
+
 void AutoScope::onLoadProjectClicked()
 {
-    QString folderPath = QFileDialog::getExistingDirectory(this,"选择一个项目文件夹","");
-    if(!folderPath.isEmpty()){
+    QString folderPath = QFileDialog::getExistingDirectory(this, "选择一个项目文件夹", "");
+    if (!folderPath.isEmpty()) {
         treeView->Clear();
         QFileInfo fileInfo(folderPath);
         ProjectNode projectInfo(fileInfo.fileName(), folderPath, fileInfo.isDir());
-        QStandardItem* rootItem = treeView->addRoot(folderPath);
-        treeView->setItemTag(rootItem,QVariant::fromValue(projectInfo));
-        loadProjectDirectory(folderPath,rootItem);
+
+        QStandardItem* rootItem = treeView->addRoot(fileInfo.fileName());
+        treeView->setItemTag(rootItem, QVariant::fromValue(projectInfo));
+
+        loadProjectDirectory(folderPath, rootItem);
     }
 }
 

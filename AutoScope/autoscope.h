@@ -33,7 +33,7 @@ private:
      */
     void initializeComponent();
 
-    void loadProjectDirectory(QString folderPath,QStandardItem* item);
+    void loadProjectDirectory(const QString& folderPath,QStandardItem* item);
 
 private slots:
     /**
