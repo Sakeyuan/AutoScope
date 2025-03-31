@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     appconfiguration.cpp \
+    logutil.cpp \
     main.cpp \
     autoscope.cpp \
     msgboxhelper.cpp \
@@ -19,6 +20,7 @@ HEADERS += \
     ProjectNode.h \
     appconfiguration.h \
     autoscope.h \
+    logutil.h \
     msgboxhelper.h \
     mytreeview.h
 
@@ -29,3 +31,7 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc \
+    res.qrc

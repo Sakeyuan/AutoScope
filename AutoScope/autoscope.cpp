@@ -51,10 +51,9 @@ void AutoScope::loadProjectDirectory(const QString& folderPath, QStandardItem* p
         QFileInfo entryInfo(fullPath);
 
         if (entryInfo.isDir()) {
-            // 如果是目录，则创建一个节点并递归加载
             ProjectNode projectInfo(entryInfo.fileName(), fullPath, true);
             QStandardItem* childItem = new QStandardItem(entryInfo.fileName());
-            // childItem->setIcon(QIcon(":/icons/folder.png"));
+            childItem->setIcon(QIcon(":/img/folder.png"));
             parentItem->appendRow(childItem);
             childItem->setData(QVariant::fromValue(projectInfo), Qt::UserRole);
 
@@ -65,7 +64,7 @@ void AutoScope::loadProjectDirectory(const QString& folderPath, QStandardItem* p
             if (entryInfo.suffix().toLower() == "xlsx") {
                 ProjectNode projectInfo(entryInfo.fileName(), fullPath, false);
                 QStandardItem* childItem = new QStandardItem(entryInfo.fileName());
-                // childItem->setIcon(QIcon(":/icons/file.png"));
+                childItem->setIcon(QIcon(":/img/file.png"));
                 parentItem->appendRow(childItem);
                 childItem->setData(QVariant::fromValue(projectInfo), Qt::UserRole);
             }
@@ -83,6 +82,7 @@ void AutoScope::onLoadProjectClicked()
         ProjectNode projectInfo(fileInfo.fileName(), folderPath, fileInfo.isDir());
 
         QStandardItem* rootItem = treeView->addRoot(fileInfo.fileName());
+        rootItem->setIcon(QIcon(":/img/folder.png"));
         treeView->setItemTag(rootItem, QVariant::fromValue(projectInfo));
 
         loadProjectDirectory(folderPath, rootItem);
@@ -103,7 +103,7 @@ void AutoScope::onTreeViewDoubleClicked(QStandardItem* item)
     if (item) {
         // 处理节点双击事件
         QString text = treeView->getItemText(item);
-        // TODO: 添加你的处理逻辑
+        qDebug() << "双击: " << text;
     }
 }
 

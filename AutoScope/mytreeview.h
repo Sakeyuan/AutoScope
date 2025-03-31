@@ -109,6 +109,7 @@ public:
     void setItemTag(QStandardItem* item, const QVariant& tag);
 
     QVariant getItemTag(QStandardItem* item) const;
+
 signals:
     /**
      * @brief 节点选择改变信号

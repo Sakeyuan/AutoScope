@@ -13,6 +13,7 @@ public:
     static AppConfiguration* getInstance();
 private:
     AppConfiguration();
+    QString configPath = "config.json";
 
     static const QString DEFAULT_SAVE_PATH;
     static const QStringList DEFAULT_SERVER_IPS;
@@ -23,6 +24,8 @@ private:
     QString m_lastSelectResource;
 
 public:
+    static void LoadConfig();
+
     QStringList serverIp() const { return m_serverIp; }
     void setServerIp(const QStringList& ips){ m_serverIp = ips; }
 

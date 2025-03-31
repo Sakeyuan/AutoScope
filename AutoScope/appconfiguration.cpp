@@ -8,6 +8,11 @@ AppConfiguration::AppConfiguration()
 
 }
 
+void AppConfiguration::LoadConfig()
+{
+
+}
+
 AppConfiguration *AppConfiguration::getInstance()
 {
     static AppConfiguration instance;
