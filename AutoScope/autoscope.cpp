@@ -1,7 +1,7 @@
 #include "autoscope.h"
 #include "ui_autoscope.h"
 #include "msgboxhelper.h"
-
+#include "connectsettingform.h"
 #include <QFileDialog>
 #include <QDebug>
 #include <QDir>
@@ -34,6 +34,8 @@ void AutoScope::initializeComponent()
     connect(ui->loadProjectAction, &QAction::triggered, this, &AutoScope::onLoadProjectClicked);
     connect(treeView, &MyTreeView::SelectionChanged, this, &AutoScope::onTreeViewSelectionChanged);
     connect(treeView, &MyTreeView::itemDoubleClicked, this, &AutoScope::onTreeViewDoubleClicked);
+    connect(ui->connectSettinggAct,&QAction::triggered,this,&AutoScope::onConnectSettingActTriggered);
+    connect(ui->pathSettingAct,&QAction::triggered,this,&AutoScope::onPathSettingActTriggered);
 }
 
 void AutoScope::loadProjectDirectory(const QString& folderPath, QStandardItem* parentItem)
@@ -72,7 +74,6 @@ void AutoScope::loadProjectDirectory(const QString& folderPath, QStandardItem* p
     }
 }
 
-
 void AutoScope::onLoadProjectClicked()
 {
     QString folderPath = QFileDialog::getExistingDirectory(this, "选择一个项目文件夹", "");
@@ -105,5 +106,17 @@ void AutoScope::onTreeViewDoubleClicked(QStandardItem* item)
         QString text = treeView->getItemText(item);
         qDebug() << "双击: " << text;
     }
+}
+
+void AutoScope::onConnectSettingActTriggered()
+{
+    {
+
+    }
+}
+
+void AutoScope::onPathSettingActTriggered()
+{
+
 }
 

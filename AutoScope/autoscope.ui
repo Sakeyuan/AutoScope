@@ -68,11 +68,15 @@
     <property name="title">
      <string>通信</string>
     </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
    </widget>
    <widget class="QMenu" name="settingMenu">
     <property name="title">
      <string>设置</string>
     </property>
+    <addaction name="connectSettinggAct"/>
+    <addaction name="pathSettingAct"/>
    </widget>
    <widget class="QMenu" name="screenCaptrue">
     <property name="title">
@@ -94,6 +98,26 @@
   <action name="loadProjectAction">
    <property name="text">
     <string>加载项目</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>连接</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>断开连接</string>
+   </property>
+  </action>
+  <action name="connectSettinggAct">
+   <property name="text">
+    <string>连接设置</string>
+   </property>
+  </action>
+  <action name="pathSettingAct">
+   <property name="text">
+    <string>路径设置</string>
    </property>
   </action>
  </widget>

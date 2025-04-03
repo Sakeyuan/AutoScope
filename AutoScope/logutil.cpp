@@ -30,8 +30,6 @@ LogUtilPrivate::LogUtilPrivate()
         if(nullptr != logOut)
                 logOut->flush();
     });
-
-
 }
 
 LogUtilPrivate::~LogUtilPrivate(){
@@ -41,7 +39,7 @@ LogUtilPrivate::~LogUtilPrivate(){
         delete logOut;
         delete logFile;
 
-        logOut = nullptr;
+        logOut = nullptr;   
         logFile = nullptr;
     }
 }
@@ -164,7 +162,7 @@ void LogUtilPrivate::messageHandler(QtMsgType type, const QMessageLogContext &co
             break;
         }
 
-        // 输出到标准输出: Windows 下 std::cout 使用 GB2312，而 msg 使用 UTF-8，但是程序的 Local 也还是使用 UTF-8
+    // 输出到标准输出: Windows 下 std::cout 使用 GB2312，而 msg 使用 UTF-8，但是程序的 Local 也还是使用 UTF-8
     #if defined(Q_OS_WIN)
         QByteArray localMsg = QTextCodec::codecForName("GB2312")->fromUnicode(msg); //msg.toLocal8Bit();
     #else
@@ -182,9 +180,23 @@ void LogUtilPrivate::messageHandler(QtMsgType type, const QMessageLogContext &co
         int index = fileName.lastIndexOf(QDir::separator());
         fileName = fileName.mid(index + 1);
 
-        (*LogUtilPrivate::logOut) << QString("%1 - [%2] (%3:%4, %5): %6\n")
-                                        .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss")).arg(level)
-                                        .arg(fileName).arg(context.line).arg(context.function).arg(msg);
+        // 获取当前时间，包含毫秒
+        QDateTime currentTime = QDateTime::currentDateTime();
+        QString timeStr = currentTime.toString("yyyy-MM-dd hh:mm:ss");
+        QString msStr = QString("%1").arg(currentTime.time().msec(), 3, 10, QChar('0'));
+        
+        // 获取当前线程ID
+        Qt::HANDLE threadId = QThread::currentThreadId();
+        
+        (*LogUtilPrivate::logOut) << QString("%1,%2 线程ID:[%3][%4] (%5:%6, %7): %8\n")
+                                        .arg(timeStr)
+                                        .arg(msStr)
+                                        .arg(QString::number((qulonglong)threadId))
+                                        .arg(level)
+                                        .arg(fileName)
+                                        .arg(context.line)
+                                        .arg(context.function)
+                                        .arg(msg);
 }
 
 // 给Qt安装消息处理函数
@@ -199,9 +211,13 @@ void LogUtil::installMessageHandler() {
 
 // 取消安装消息处理函数并释放资源
 void LogUtil::uninstallMessageHandler() {
-    QMutexLocker locker(&LogHandlerPrivate::logMutex);
+    QMutexLocker locker(&LogUtilPrivate::logMutex);
 
     qInstallMessageHandler(nullptr);
     delete d;
     d = nullptr;
+}
+
+LogUtil::LogUtil() : d(nullptr)
+{
 }

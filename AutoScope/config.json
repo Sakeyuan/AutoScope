@@ -1,0 +1,9 @@
+{
+    "ServerIP": ["192.168.1.1", "10.1.5.220"],
+    "LastOpenPath": "/home/user/documents",
+    "LastSelectResource": "resource1",
+    "LastSavePath": "/home/user/saves",
+    "LastConnectType": "WiFi",
+    "LastAnySharePath": "/mnt/shared"
+  }
+  

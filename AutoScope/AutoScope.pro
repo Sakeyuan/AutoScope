@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     appconfiguration.cpp \
+    connectsettingform.cpp \
     logutil.cpp \
     main.cpp \
     autoscope.cpp \
@@ -20,12 +21,18 @@ HEADERS += \
     ProjectNode.h \
     appconfiguration.h \
     autoscope.h \
+    connectsettingform.h \
     logutil.h \
     msgboxhelper.h \
     mytreeview.h
 
 FORMS += \
-    autoscope.ui
+    autoscope.ui \
+    connectsettingform.ui
+
+
+DEFINES += QT_MESSAGELOGCONTEXT
+DISTFILES += config.json
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
